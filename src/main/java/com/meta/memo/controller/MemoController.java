@@ -41,4 +41,20 @@ public class MemoController {
                 .map(MemoResponseDto::new).toList();
         return memoResponseDtoList;
     }
+
+    @PutMapping("{id}")
+    public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto memoRequestDto) {
+        // 해당 id의 메모가 데이터베이스에 존재하는지 확인
+        if (memoList.containsKey(id)) {
+            // true면, 해당 메모 가져오기
+            Memo foundMemo = memoList.get(id);
+
+            foundMemo.update(memoRequestDto);
+
+            return foundMemo.getId();
+        } else {
+            throw new IllegalArgumentException("선택한 id의 메모는 존재하지 않습니다.");
+        }
+
+    }
 }
