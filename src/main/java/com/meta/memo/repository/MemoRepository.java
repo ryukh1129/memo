@@ -14,9 +14,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class MemoRepository {
-    // JDBC를 통한 MySQL 데이터베이스 연결
+    // JDBC 멤버 변수 선언
     private final JdbcTemplate jdbcTemplate;
 
+
+    // 생성자 주입(DI)
     public MemoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
