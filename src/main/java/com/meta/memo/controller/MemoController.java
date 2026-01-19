@@ -1,19 +1,12 @@
 package com.meta.memo.controller;
 
-import com.meta.memo.domain.Memo;
 import com.meta.memo.dto.MemoRequestDto;
 import com.meta.memo.dto.MemoResponseDto;
 import com.meta.memo.service.MemoService;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/memos")
@@ -46,24 +39,6 @@ public class MemoController {
     @DeleteMapping("{id}")
     public Long deleteMemo(@PathVariable Long id) {
         MemoService memoService = new MemoService(jdbcTemplate);
-        return id;
-
-    }
-
-    // 특정 id의 메모 존재 여부 확인 공용 메소드
-    private Memo findById(Long id) {
-        // DB 조회
-        String sql = "SELECT * FROM memo WHERE id = ?";
-
-        return jdbcTemplate.query(sql, resultSet -> {
-            if (resultSet.next()) {
-                Memo memo = new Memo();
-                memo.setUsername(resultSet.getString("username"));
-                memo.setContents(resultSet.getString("contents"));
-                return memo;
-            } else {
-                return null;
-            }
-        }, id);
+        return memoService.deleteMemo(id);
     }
 }
