@@ -156,3 +156,49 @@ from student as s
 select s.name, s.major_code, m.major_name
 from student s, major m
 where s.major_code = m.major_code;
+
+
+# 문제 1. Manager 테이블 생성
+CREATE TABLE manager (
+    id bigint primary key ,
+    name varchar(100) not null,
+    student_code varchar(100) not null,
+    constraint manager_fk_student_code foreign key (student_code) references student(student_code)
+);
+
+# 문제 2. AUTO_INCREMENT 기능 추가
+ALTER TABLE manager
+modify column id bigint not null auto_increment;
+
+# 문제 3. 데이터 삽입(Insert)
+INSERT INTO manager (name, student_code) values
+    ('managerA', 's1'),
+    ('managerA', 's2'),
+    ('managerA', 's3'),
+    ('managerA', 's4'),
+    ('managerA', 's5'),
+    ('managerB', 's6'),
+    ('managerB', 's7'),
+    ('managerB', 's8'),
+    ('managerB', 's9');
+
+# 문제 4. 다중 조인
+SELECT s.name, e.exam_seq, e.score
+FROM manager m
+JOIN student s on m.student_code = s.student_code
+JOIN exam e on m.student_code = e.student_code
+WHERE m.name = 'managerA';
+
+# 문제 5. 제약조건 변경(Cascade) 사용
+ALTER TABLE manager drop foreign key manager_fk_student_code;
+ALTER TABLE manager
+add constraint manager_fk_student_code
+foreign key (student_code) references student(student_code) on delete cascade;
+
+ALTER TABLE exam drop foreign key exam_fk_student_code;
+ALTER TABLE exam
+add constraint exam_fk_student_code
+foreign key (student_code) references student(student_code) on delete cascade;
+
+DELETE from student where student_code = 's1';
+SELECT * from student where student_code = 's1';
