@@ -7,16 +7,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class MemoRepository {
     // JDBC 멤버 변수 선언
     private final JdbcTemplate jdbcTemplate;
-
 
     // 생성자 주입(DI)
     public MemoRepository(JdbcTemplate jdbcTemplate) {
@@ -28,8 +29,8 @@ public class MemoRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder(); //기본 키를 반환 받기 위한 객체
 
         String sql = "INSERT INTO memo (username, contents) VALUES (?, ?)";
-        jdbcTemplate.update( con -> {
-            PreparedStatement preparedStatement = con.prepareStatement( sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, newMemo.getUsername());
             preparedStatement.setString(2, newMemo.getContents());
             return preparedStatement;
@@ -46,7 +47,7 @@ public class MemoRepository {
         // DB 조회
         String sql = "SELECT * FROM memo";
 
-        List<MemoResponseDto> memoResponseDtoList = jdbcTemplate.query( sql, new RowMapper<MemoResponseDto>() {
+        List<MemoResponseDto> memoResponseDtoList = jdbcTemplate.query(sql, new RowMapper<MemoResponseDto>() {
             @Override
             public MemoResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
                 Long id = rs.getLong("id");
@@ -63,8 +64,8 @@ public class MemoRepository {
         // DB 조회
         String sql = "SELECT * FROM memo where id = ?";
 
-        return jdbcTemplate.query( sql, resultSet -> {
-            if(resultSet.next()) {
+        return jdbcTemplate.query(sql, resultSet -> {
+            if (resultSet.next()) {
                 Memo memo = new Memo();
                 memo.setUsername(resultSet.getString("username"));
                 memo.setContents(resultSet.getString("contents"));
@@ -77,13 +78,13 @@ public class MemoRepository {
 
     public Long update(Long id, MemoRequestDto memoRequestDto) {
         String sql = "UPDATE memo SET username = ?, contents = ? WHERE id = ?";
-        jdbcTemplate.update( sql, memoRequestDto.getUsername(), memoRequestDto.getContents(), id);
+        jdbcTemplate.update(sql, memoRequestDto.getUsername(), memoRequestDto.getContents(), id);
         return id;
     }
 
     public Long delete(Long id) {
         String sql = "DELETE FROM memo WHERE id = ?";
-        jdbcTemplate.update( sql, id);
+        jdbcTemplate.update(sql, id);
         return id;
     }
 }
