@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MemoRepository extends JpaRepository<Memo, Long> {
     List<Memo> findAllByOrderByCreatedAtDesc();
+    List<Memo> findAllByContentsContainsOrderByModifiedAtDesc(String keyword);
 }

@@ -38,6 +38,12 @@ public class MemoService {
         return memoResponseDtoList;
     }
 
+    public List<MemoResponseDto> getMemosByKeyword(String keyword) {
+        List<MemoResponseDto> memoResponseDtoList = memoRepository.findAllByContentsContainsOrderByModifiedAtDesc(keyword).stream()
+                .map(MemoResponseDto::new).toList();
+        return memoResponseDtoList;
+    }
+
     public Memo getMemoById(Long id) {
         return memoRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 id의 메모는 존재하지 않습니다."));
